@@ -149,8 +149,6 @@ impl Default for PostProcessedCli {
 }
 
 pub fn process_cli_args(mut cli: Cli) -> PostProcessedCli {
-    cli.validate();
-
     if cli.paths.is_empty() {
         cli.paths.push(PathBuf::from(DEFAULT_PATH));
     }

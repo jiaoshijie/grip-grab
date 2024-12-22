@@ -34,7 +34,11 @@ pub enum GGError {
 }
 
 pub fn main() -> Result<(), GGError> {
-    let cli_args = process_cli_args(Cli::parse());
+    let mut cli = Cli::parse();
+    cli.validate();
+    let path_provided_by_cli = !cli.paths.is_empty();
+
+    let cli_args = process_cli_args(cli);
 
     if let Some(subcommand) = cli_args.sub_command {
         match subcommand {
@@ -45,7 +49,7 @@ pub fn main() -> Result<(), GGError> {
         }
     }
 
-    if is_readable_stdin() {
+    if !path_provided_by_cli && is_readable_stdin() {
         let stdin = stdin();
         let mut buf = Vec::new();
         if stdin.lock().read_to_end(&mut buf)? != 0 {
